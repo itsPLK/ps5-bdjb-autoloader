@@ -67,22 +67,14 @@ final class AutoloadConfigLocator {
     static List<String> candidates() {
         Set<String> ordered = new LinkedHashSet<String>();
 
-        ordered.add("/app0/" + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
-        ordered.add("/app0/disc/" + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
         for (int usb = 0; usb <= 7; usb++) {
             ordered.add("/mnt/usb" + usb + "/" + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
         }
         ordered.add("/data/" + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
-        
-        // Sandbox internal paths.
-        ordered.add("/data/self/interactive/" + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
-
-        addSandboxCandidates(ordered);
-        
-        ordered.add(AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
+        ordered.add("/mnt/disc/" + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
 
         List<String> basePaths = new ArrayList<String>();
-        
+
         // Add current working directory
         try {
             String userDir = System.getProperty("user.dir", ".");
@@ -150,32 +142,5 @@ final class AutoloadConfigLocator {
              return "/";
         }
         return null;
-    }
-
-    private static void addSandboxCandidates(Set<String> ordered) {
-        try {
-            File sandboxRoot = new File("/mnt/sandbox");
-            if (!sandboxRoot.exists() || !sandboxRoot.isDirectory()) {
-                return;
-            }
-
-            String[] sandboxDirs = sandboxRoot.list();
-            if (sandboxDirs == null) {
-                return;
-            }
-
-            for (int i = 0; i < sandboxDirs.length; i++) {
-                String sandboxDir = sandboxDirs[i];
-                if (sandboxDir == null || !sandboxDir.endsWith("_000")) {
-                    continue;
-                }
-
-                String base = "/mnt/sandbox/" + sandboxDir + "/app0/";
-                ordered.add(base + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
-                ordered.add(base + "disc/" + AUTOLOAD_DIR + "/" + AUTOLOAD_FILE);
-            }
-        } catch (Throwable ignored) {
-            // Keep candidate generation best-effort only.
-        }
     }
 }

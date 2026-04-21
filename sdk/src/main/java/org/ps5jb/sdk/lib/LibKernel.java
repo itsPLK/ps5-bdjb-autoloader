@@ -30,6 +30,7 @@ public class LibKernel extends Library {
     private Pointer getuid;
     private Pointer setuid;
     private Pointer getpid;
+    private Pointer kill;
     private Pointer dup;
     private Pointer dup2;
     private Pointer open;
@@ -217,6 +218,21 @@ public class LibKernel extends Library {
             getpid = addrOf("getpid");
         }
         return (int) call(getpid);
+    }
+
+    /**
+     * Send a signal to a process.
+     *
+     * @param pid Process ID.
+     * @param sig Signal number.
+     * @return Upon successful completion, the value 0 is returned; otherwise the value -1 is returned
+     *   and the global variable {@link ErrNo#errno() errno} is set to indicate the error.
+     */
+    public int kill(int pid, int sig) {
+        if (kill == null) {
+            kill = addrOf("kill");
+        }
+        return (int) call(kill, pid, sig);
     }
 
     /**

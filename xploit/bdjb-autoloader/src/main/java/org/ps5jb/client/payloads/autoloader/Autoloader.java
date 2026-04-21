@@ -74,6 +74,9 @@ public class Autoloader implements Runnable {
         for (String command : commands) {
             processCommand(command, configDir);
         }
+
+        // Kill the Disc Player app after all commands are processed
+        killApp();
     }
 
     private void processCommand(String command, File configDir) throws Exception {
@@ -218,6 +221,17 @@ public class Autoloader implements Runnable {
             libKernel.sceKernelSendNotificationRequest(message);
         } catch (Throwable ignored) {
             // Notification failure must never stop the autoloader.
+        }
+    }
+
+    private void killApp() {
+        try {
+            int pid = libKernel.getpid();
+            Status.println("Killing process " + pid);
+            // SIGKILL = 9
+            libKernel.kill(pid, 9);
+        } catch (Throwable t) {
+            Status.printStackTrace("Failed to kill app", t);
         }
     }
 }
