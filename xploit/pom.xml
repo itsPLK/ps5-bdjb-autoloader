@@ -34,14 +34,8 @@
 
     <modules>
         <module>jar</module>
-        <module>samples</module>
-        <module>ftpserver</module>
         <module>umtx</module>
-        <module>byepervisor</module>
-        <module>kerneldump</module>
-        <module>klogserver</module>
         <module>jailbreak</module>
-        <module>debugsettings</module>
         <module>bdjb-autoloader</module>
     </modules>
 
