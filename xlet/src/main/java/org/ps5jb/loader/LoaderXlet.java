@@ -14,8 +14,7 @@ import javax.tv.xlet.XletContext;
 import org.havi.ui.HScene;
 import org.havi.ui.HSceneFactory;
 import org.ps5jb.loader.jar.JarLoader;
-import org.ps5jb.loader.jar.RemoteJarLoader;
-import org.ps5jb.loader.jar.menu.MenuLoader;
+import org.ps5jb.loader.jar.SequentialJarLoader;
 
 /**
  * BD-J main entry point class.
@@ -70,15 +69,12 @@ public class LoaderXlet implements Xlet {
 
         try {
             if (System.getSecurityManager() == null) {
-                final String jarLoaderThreadName;
-                if (MenuLoader.listPayloads().length > 0) {
-                    jarLoader = new MenuLoader();
-                    jarLoaderThreadName = "MenuLoader";
-                } else {
-                    jarLoader = new RemoteJarLoader(Config.getLoaderPort());
-                    jarLoaderThreadName = "JarLoader";
-                }
-                jarLoaderThread = new Thread(jarLoader, jarLoaderThreadName);
+                jarLoader = new SequentialJarLoader(new String[] {
+                    "umtx1-1.0-SNAPSHOT.jar",
+                    "jailbreak-1.0-SNAPSHOT.jar",
+                    "bdjb-autoloader-0.1.0-SNAPSHOT.jar"
+                });
+                jarLoaderThread = new Thread(jarLoader, "AutoLoader");
                 jarLoaderThread.start();
             }
         } catch (Throwable e) {

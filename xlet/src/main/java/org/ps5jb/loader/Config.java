@@ -117,7 +117,16 @@ public class Config {
         } catch (IOException e) {
             throw new RuntimeException("Payload root path could not be retrieved due to I/O error", e);
         }
-        return new File(discRoot, props.getProperty("loader.payload.root", "jar-payloads"));
+        return new File(discRoot, getLoaderPayloadRoot());
+    }
+
+    /**
+     * Get the configured payload directory name relative to the disc root.
+     *
+     * @return Relative payload directory path.
+     */
+    public static String getLoaderPayloadRoot() {
+        return props.getProperty("loader.payload.root", "jar-payloads");
     }
 
     /**

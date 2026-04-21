@@ -25,8 +25,11 @@ public interface JarLoader extends Runnable {
         }
 
         String backgroundThreadName = mf.getMainAttributes().getValue(MANIFEST_BACKGROUND_KEY);
-        if ("".equals(backgroundThreadName)) {
-            backgroundThreadName = null;
+        if (backgroundThreadName != null) {
+            backgroundThreadName = backgroundThreadName.trim();
+            if (backgroundThreadName.length() == 0) {
+                backgroundThreadName = null;
+            }
         }
 
         Status.println("Reading JAR Manifest... Main Class: " + mainClassName, true);

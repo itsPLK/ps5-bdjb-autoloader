@@ -258,6 +258,11 @@
                     <artifactId>umtx1</artifactId>
                     <version>${project.parent.version}</version>
                 </dependency>
+                <dependency>
+                    <groupId>org.ps5jb.xploit</groupId>
+                    <artifactId>bdjb-autoloader</artifactId>
+                    <version>0.1.0-SNAPSHOT</version>
+                </dependency>
             </dependencies>
         </profile>
     </profiles>

@@ -42,6 +42,7 @@
         <module>klogserver</module>
         <module>jailbreak</module>
         <module>debugsettings</module>
+        <module>bdjb-autoloader</module>
     </modules>
 
     <dependencies>
