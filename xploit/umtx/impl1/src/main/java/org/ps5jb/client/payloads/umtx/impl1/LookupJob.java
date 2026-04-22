@@ -38,14 +38,22 @@ public class LookupJob extends CommonJob {
             DebugStatus.debug("Starting loop");
 
             DebugStatus.debug("Waiting for ready flag");
+            int yieldCount = 0;
             while (!this.state.readyFlag.get()) {
+                if (yieldCount++ % 1024 == 0) {
+                    thread_yield();
+                }
             }
 
             // Notify main thread that lookup thread's loop is ready to start.
             this.state.numReadyThreads.incrementAndGet();
 
             DebugStatus.debug("Waiting for destroy flag");
+            yieldCount = 0;
             while (!this.state.destroyFlag.get()) {
+                if (yieldCount++ % 1024 == 0) {
+                    thread_yield();
+                }
             }
 
             // Trigger lookup of primary user mutex and check for result.
@@ -66,14 +74,22 @@ public class LookupJob extends CommonJob {
             this.state.numCompletedThreads.incrementAndGet();
 
             DebugStatus.debug("Waiting for check done flag");
+            yieldCount = 0;
             while (!this.state.checkDoneFlag.get()) {
+                if (yieldCount++ % 1024 == 0) {
+                    thread_yield();
+                }
             }
 
             // Notify main thread that lookup thread is ready to finish.
             this.state.numReadyThreads.incrementAndGet();
 
             DebugStatus.debug("Waiting for done flag");
+            yieldCount = 0;
             while (!this.state.doneFlag.get()) {
+                if (yieldCount++ % 1024 == 0) {
+                    thread_yield();
+                }
             }
 
             // Notify main thread that lookup thread's loop was finished.
@@ -81,7 +97,11 @@ public class LookupJob extends CommonJob {
         }
 
         DebugStatus.debug("Waiting for destroy flag");
+        int yieldCount = 0;
         while (!this.state.destroyFlag.get()) {
+            if (yieldCount++ % 1024 == 0) {
+                thread_yield();
+            }
         }
 
         DebugStatus.notice("Finishing loop");
