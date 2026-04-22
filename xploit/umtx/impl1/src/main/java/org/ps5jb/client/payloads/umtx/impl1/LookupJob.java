@@ -39,7 +39,6 @@ public class LookupJob extends CommonJob {
 
             DebugStatus.debug("Waiting for ready flag");
             while (!this.state.readyFlag.get()) {
-                thread_yield();
             }
 
             // Notify main thread that lookup thread's loop is ready to start.
@@ -47,7 +46,6 @@ public class LookupJob extends CommonJob {
 
             DebugStatus.debug("Waiting for destroy flag");
             while (!this.state.destroyFlag.get()) {
-                thread_yield();
             }
 
             // Trigger lookup of primary user mutex and check for result.
@@ -69,7 +67,6 @@ public class LookupJob extends CommonJob {
 
             DebugStatus.debug("Waiting for check done flag");
             while (!this.state.checkDoneFlag.get()) {
-                thread_yield();
             }
 
             // Notify main thread that lookup thread is ready to finish.
@@ -77,7 +74,6 @@ public class LookupJob extends CommonJob {
 
             DebugStatus.debug("Waiting for done flag");
             while (!this.state.doneFlag.get()) {
-                thread_yield();
             }
 
             // Notify main thread that lookup thread's loop was finished.
@@ -86,7 +82,6 @@ public class LookupJob extends CommonJob {
 
         DebugStatus.debug("Waiting for destroy flag");
         while (!this.state.destroyFlag.get()) {
-            thread_yield();
         }
 
         DebugStatus.notice("Finishing loop");

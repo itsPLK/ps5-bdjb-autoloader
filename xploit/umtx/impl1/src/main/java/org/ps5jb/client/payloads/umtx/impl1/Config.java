@@ -24,7 +24,7 @@ public class Config {
     public static final int MAX_RACING_ITERATIONS = 50000;
     public static int MAX_DUMMY_SHARED_MEMORY_OBJECTS = 0;
     public static final int MAX_DESTROYER_THREADS = 2;
-    public static int MAX_SPRAY_MUTEXES_PER_THREAD = 35;
+    public static int MAX_SPRAY_MUTEXES_PER_THREAD = 50;
     public static int MAX_RECLAIM_THREADS = 250;
     public static final int MAX_SEARCH_LOOP_INVOCATIONS = 2;
     public static final int MAX_EXTRA_USER_MUTEXES = 0;
@@ -33,7 +33,7 @@ public class Config {
     // Amounts of milliseconds we need to wait at different steps.
     public static final long INITIAL_WAIT_PERIOD = 50; // 50
     public static final long KERNEL_STACK_WAIT_PERIOD = 100;
-    public static final long TINY_WAIT_PERIOD = 50; // 50
+    public static final long TINY_WAIT_PERIOD = 10; // 50
 
     // Special marker to determine victim thread's ID.
     public static final int RECLAIM_THREAD_MARKER_BASE = 0x00001337;
