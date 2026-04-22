@@ -32,7 +32,7 @@
         <loader.payload.root>jar-payloads</loader.payload.root>
 
         <!-- Do not use the same version as parent project for Xlet because it will be modified less frequently. We only want to burn new disc if Xlet changes -->
-        <xlet.version>4.1.1</xlet.version>
+        <xlet.version>0.1.0</xlet.version>
     </properties>
 
     <modules>

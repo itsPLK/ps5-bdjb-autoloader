@@ -165,9 +165,13 @@ public class Autoloader implements Runnable {
 
         genericElfLoader.loadAndRun(overrideElfLdr == null ? null : overrideElfLdr.getAbsolutePath());
 
+        // Wait for elfldr to initialize before polling
+        Status.println("Waiting 3s for elfldr to initialize...");
+        Thread.sleep(3000);
+
         // Poll for elfldr connectivity
         long startTime = System.currentTimeMillis();
-        long timeout = 10000; // 10 seconds total timeout
+        long timeout = 30000; // 30 seconds total timeout
         boolean success = false;
         
         while (System.currentTimeMillis() - startTime < timeout) {

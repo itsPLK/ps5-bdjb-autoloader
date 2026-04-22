@@ -2,13 +2,13 @@
 <disclib xmlns="urn:BDA:bdmv;disclib">
   <di:discinfo xmlns:di="urn:BDA:bdmv;discinfo">
     <di:title>
-      <di:name>PS5 JAR Loader v${xlet.version}</di:name>
+      <di:name>PS5 BD-JB Autoloader v${xlet.version}</di:name>
       <di:numSets>1</di:numSets>
       <di:setNumber>1</di:setNumber>
     </di:title>
     <di:description>
       <di:tableOfContents>
-        <di:titleName titleNumber="1">PS5 JAR Loader v${xlet.version}</di:titleName>
+        <di:titleName titleNumber="1">PS5 BD-JB Autoloader v${xlet.version}</di:titleName>
       </di:tableOfContents>
       <di:thumbnail href="ps5loader.png"/>
     </di:description>
