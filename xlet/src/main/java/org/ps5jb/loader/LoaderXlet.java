@@ -71,7 +71,6 @@ public class LoaderXlet implements Xlet {
             if (System.getSecurityManager() == null) {
                 jarLoader = new SequentialJarLoader(new String[] {
                     "umtx1-1.0-SNAPSHOT.jar",
-                    "jailbreak-1.0-SNAPSHOT.jar",
                     "bdjb-autoloader-0.1.0-SNAPSHOT.jar"
                 });
                 jarLoaderThread = new Thread(jarLoader, "AutoLoader");
