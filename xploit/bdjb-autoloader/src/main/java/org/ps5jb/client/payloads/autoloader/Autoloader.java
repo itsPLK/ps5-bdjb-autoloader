@@ -38,14 +38,10 @@ public class Autoloader implements Runnable {
 
     private void runInternal() throws Exception {
         Status.println("Autoloader starting...");
-        
-        // Sandbox escape and root access are now handled by jailbreak-1.0-SNAPSHOT.jar
-        // before this payload runs. We just verify the status here.
 
         try {
             int uid = libKernel.getuid();
             boolean sandboxed = libKernel.is_in_sandbox();
-            notifyPs("UID: " + uid + ", Sandboxed: " + sandboxed);
             Status.println("UID: " + uid + ", Sandboxed: " + sandboxed);
         } catch (Throwable ignored) {}
 

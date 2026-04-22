@@ -1,4 +1,4 @@
-package org.ps5jb.client.payloads;
+package org.ps5jb.client.payloads.umtx.impl1;
 
 import java.io.File;
 import java.lang.ref.SoftReference;
@@ -21,6 +21,7 @@ import java.util.Stack;
 import java.util.Set;
 import java.util.jar.JarFile;
 
+import org.ps5jb.client.payloads.umtx.common.DebugStatus;
 import org.ps5jb.client.utils.init.KernelBaseUnknownException;
 import org.ps5jb.client.utils.init.KernelReadWriteUnavailableException;
 import org.ps5jb.client.utils.init.SdkInit;
@@ -51,8 +52,6 @@ public class Jailbreak implements Runnable {
 
     private static final String BDMV_PLAYER_COMM = "BdmvPlayerCore.elf";
 
-    private static final boolean VERBOSE = false;
-
     private ProcessUtils procUtils;
 
     @Override
@@ -67,21 +66,21 @@ public class Jailbreak implements Runnable {
             int curUid = libKernel.getuid();
             int curPid = libKernel.getpid();
             boolean isSandbox = libKernel.is_in_sandbox();
-            println("Current UID: " + curUid + ". Current PID: " + curPid);
-            println("In sandbox? " + (isSandbox ? "Yes" : "No"));
+            DebugStatus.info("Current UID: " + curUid + ". Current PID: " + curPid);
+            DebugStatus.info("In sandbox? " + (isSandbox ? "Yes" : "No"));
 
             if (curUid == 0 && !isSandbox) {
-                println("Already jailbroken. Aborting!");
+                DebugStatus.info("Already jailbroken. Aborting!");
                 return;
             }
 
             Process curProc = new Process(KernelPointer.valueOf(sdk.curProcAddress));
             String curProcName = curProc.getName();
-            println("Found current process at " + curProc.getPointer() + " named " + curProcName, true);
+            DebugStatus.debug("Found current process at " + curProc.getPointer() + " named " + curProcName);
 
             Process bdmvPlayerProcess = findBdPlayerProcess();
             if (bdmvPlayerProcess == null) {
-                println("BdmvPlayerCore process could not be found. Aborting!");
+                DebugStatus.error("BdmvPlayerCore process could not be found. Aborting!");
                 return;
             }
 
@@ -94,10 +93,10 @@ public class Jailbreak implements Runnable {
 
             // Check root
             curUid = libKernel.getuid();
-            println("New UID: " + curUid + (curUid == 0 ? " (root!)" : ""));
+            DebugStatus.notice("New UID: " + curUid + (curUid == 0 ? " (root!)" : ""));
 
             // Check sandbox again
-            println("In Sandbox? " + (libKernel.is_in_sandbox() ? "Yes" : "No"));
+            DebugStatus.notice("In Sandbox? " + (libKernel.is_in_sandbox() ? "Yes" : "No"));
 
             // Update java home
             redirectJavaHome();
@@ -111,9 +110,9 @@ public class Jailbreak implements Runnable {
             // Update classpath of boot classloader
             redirectBootLoader();
         } catch (KernelReadWriteUnavailableException | KernelBaseUnknownException e) {
-            Status.println("Kernel R/W is not available or kernel data address has not been determined, aborting.");
+            DebugStatus.error("Kernel R/W is not available or kernel data address has not been determined, aborting.");
         } catch (Throwable e) {
-            Status.printStackTrace(e.getMessage(), e);
+            DebugStatus.error("Jailbreak failed: " + e.getMessage(), e);
         } finally {
             libKernel.closeLibrary();
         }
@@ -181,7 +180,7 @@ public class Jailbreak implements Runnable {
         String oldValue = System.getProperty(propertyName);
         String newValue = replacePattern(oldValue, oldPattern, newPattern);
         System.setProperty(propertyName, newValue);
-        println("Redirected system property '" + propertyName + "': '" + oldValue + "' => '" + newValue + "'", true);
+        DebugStatus.debug("Redirected system property '" + propertyName + "': '" + oldValue + "' => '" + newValue + "'");
     }
 
     private void replaceNonPublicField(String className, String fieldName, Object instance, Object value)
@@ -202,8 +201,8 @@ public class Jailbreak implements Runnable {
             oldValue = ((SoftReference) oldValue).get();
         }
         field.set(instance, value);
-        println("Redirected field value " + (instance == null ? className : instance.getClass().getName()) + "." + fieldName +
-                ": '" + oldValue + "' => '" + value + "'", true);
+        DebugStatus.debug("Redirected field value " + (instance == null ? className : instance.getClass().getName()) + "." + fieldName +
+                ": '" + oldValue + "' => '" + value + "'");
     }
 
     /**
@@ -234,7 +233,7 @@ public class Jailbreak implements Runnable {
             OpenModuleAction.execute(BOOT_LOADER_CLASS_NAME);
             OpenModuleAction.execute(JRT_FILE_SYSTEM_PROVIDER_CLASS_NAME);
         } catch (PrivilegedActionException e) {
-            Status.printStackTrace("Unable to open JDK internal modules", e);
+            DebugStatus.error("Unable to open JDK internal modules", e);
             return;
         }
 
@@ -276,11 +275,11 @@ public class Jailbreak implements Runnable {
                 }
             }
 
-            println("Java home redirected");
+            DebugStatus.info("Java home redirected");
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NoSuchMethodException e) {
-            Status.printStackTrace("Unable to redirect java.home", e);
+            DebugStatus.error("Unable to redirect java.home: " + e.getMessage());
         } catch (InvocationTargetException e) {
-            Status.printStackTrace("Unable to redirect java.home", e.getTargetException());
+            DebugStatus.error("Unable to redirect java.home: " + e.getTargetException().getMessage());
         }
     }
 
@@ -289,7 +288,7 @@ public class Jailbreak implements Runnable {
      */
     private void redirectXletClassLoader() {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        while (!"com.sony.bdjstack.core.XletClassLoader".equals(cl.getClass().getName())) {
+        while (cl != null && !"com.sony.bdjstack.core.XletClassLoader".equals(cl.getClass().getName())) {
             cl = cl.getParent();
         }
         if (cl == null) {
@@ -314,7 +313,7 @@ public class Jailbreak implements Runnable {
                 URL url = (URL) urls.pop();
                 String newUrl = replacePattern(url.toString(), ORIG_JAVA_HOME, NEW_JAVA_HOME);
                 newUrls.add(newUrl);
-                println("Redirected URL in Xlet Classloader: '" + url + "' => '" + newUrl + "'", true);
+                DebugStatus.debug("Redirected URL in Xlet Classloader: '" + url + "' => '" + newUrl + "'");
             }
             for (int i = newUrls.size() - 1; i >= 0; --i) {
                 urls.push(new URL((String) newUrls.get(i)));
@@ -325,9 +324,9 @@ public class Jailbreak implements Runnable {
             Object superUcp = superUcpField.get(cl);
             resetUcp(superUcp, cl);
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | MalformedURLException e) {
-            Status.printStackTrace("Unable to redirect the context class loader", e);
+            DebugStatus.error("Unable to redirect the context class loader: " + e.getMessage());
         } catch (InvocationTargetException e) {
-            Status.printStackTrace("Unable to redirect the context class loader", e.getTargetException());
+            DebugStatus.error("Unable to redirect the context class loader: " + e.getTargetException().getMessage());
         }
     }
 
@@ -350,9 +349,9 @@ public class Jailbreak implements Runnable {
             Object ucp = ucpField.get(cl);
             resetUcp(ucp, cl);
         } catch (NoSuchFieldException | IllegalAccessException | MalformedURLException | NoSuchMethodException | ClassNotFoundException e) {
-            Status.printStackTrace("Unable to redirect boot class loader", e);
+            DebugStatus.error("Unable to redirect boot class loader: " + e.getMessage());
         } catch (InvocationTargetException e) {
-            Status.printStackTrace("Unable to redirect boot class loader", e.getTargetException());
+            DebugStatus.error("Unable to redirect boot class loader: " + e.getTargetException().getMessage());
         }
     }
 
@@ -375,16 +374,16 @@ public class Jailbreak implements Runnable {
                     URL newUrl = new URL(replacePattern(nextPath.toString(), ORIG_JAVA_HOME, NEW_JAVA_HOME));
                     newPath.add(newUrl);
                     pathIter.remove();
-                    println("Redirected URL cache of classloader " + cl + ": '" + nextPath + "' => '" + newUrl + "'", true);
+                    DebugStatus.debug("Redirected URL cache of classloader " + cl + ": '" + nextPath + "' => '" + newUrl + "'");
                 } else {
-                    println("Skipping URL cache of classloader " + cl + ": " + nextPath, true);
+                    DebugStatus.debug("Skipping URL cache of classloader " + cl + ": " + nextPath);
                 }
             }
             for (int i = 0; i < newPath.size(); ++i) {
                 ucpAddUrlMethod.invoke(ucp, new Object[] { newPath.get(i) });
             }
         } else {
-            println("Skipping classloader " + cl + " as it has no classpath", true);
+            DebugStatus.debug("Skipping classloader " + cl + " as it has no classpath");
         }
 
         Field ucpLoadersField = ucp.getClass().getDeclaredField("loaders");
@@ -401,7 +400,7 @@ public class Jailbreak implements Runnable {
                 }
                 loaderCloseMethod.invoke(loader, new Object[0]);
             }
-            println("Cleared " + loaders.size() + " loaders in classloader " + cl, true);
+            DebugStatus.debug("Cleared " + loaders.size() + " loaders in classloader " + cl);
             loaders.clear();
         }
 
@@ -412,7 +411,7 @@ public class Jailbreak implements Runnable {
         if (lmapIter.hasNext()) {
             while (lmapIter.hasNext()) {
                 String lkey = (String) lmapIter.next();
-                println("Clearing key " + lkey + " from cache in classloader " + cl, true);
+                DebugStatus.debug("Clearing key " + lkey + " from cache in classloader " + cl);
             }
             lmap.clear();
         }
@@ -424,7 +423,7 @@ public class Jailbreak implements Runnable {
         try {
             OpenModuleAction.execute(JAR_FILE_FACTORY_CLASS_NAME);
         } catch (PrivilegedActionException e) {
-            Status.printStackTrace("Unable to open JDK internal modules", e);
+            DebugStatus.error("Unable to open JDK internal modules", e);
             return;
         }
 
@@ -448,30 +447,13 @@ public class Jailbreak implements Runnable {
                 while (jarFileIter.hasNext()) {
                     JarFile jarFile = (JarFile) jarFileIter.next();
                     closeMethod.invoke(instance, new Object[] { jarFile });
-                    println("Removed JAR file from global cache: " + jarFile.getName(), true);
+                    DebugStatus.debug("Removed JAR file from global cache: " + jarFile.getName());
                 }
             }
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
-            Status.printStackTrace("Unable to reset JAR file factory", e);
+            DebugStatus.error("Unable to reset JAR file factory: " + e.getMessage());
         } catch (InvocationTargetException e) {
-            Status.printStackTrace("Unable to reset JAR file factory", e.getTargetException());
-        }
-    }
-
-    private void println(String message) {
-        println(message, false);
-    }
-
-    /**
-     * Conditionally prints information.
-     *
-     * @param message Message to print.
-     * @param verbose Whether the given message is verbose. If true, the
-     *   then the message will only be printed if {@link #VERBOSE} is also true.
-     */
-    private void println(String message, boolean verbose) {
-        if (!verbose || VERBOSE) {
-            Status.println(message);
+            DebugStatus.error("Unable to reset JAR file factory: " + e.getTargetException().getMessage());
         }
     }
 }

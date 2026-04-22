@@ -35,7 +35,6 @@
     <modules>
         <module>jar</module>
         <module>umtx</module>
-        <module>jailbreak</module>
         <module>bdjb-autoloader</module>
     </modules>
 
