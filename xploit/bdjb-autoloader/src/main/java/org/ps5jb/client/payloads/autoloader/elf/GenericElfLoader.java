@@ -282,9 +282,11 @@ public final class GenericElfLoader {
             appliedPatch = true;
         }
 
+        /*
         if (appliedPatch) {
             libKernel.sceKernelSendNotificationRequest("Debug Settings enabled");
         }
+        */
 
         sdk.restoreNonAgcKernelReadWrite();
         return appliedPatch;

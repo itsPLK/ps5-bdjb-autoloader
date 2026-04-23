@@ -8,6 +8,7 @@ import org.ps5jb.sdk.io.File;
 import java.util.List;
 
 public class Autoloader implements Runnable {
+    private static final boolean SHOW_DEBUG_NOTIFICATIONS = false;
     private static final int ELFLDR_PORT = 9021;
     private static final int SOCKET_CONNECT_TIMEOUT_MS = 1500;
     private static final int ELFLDR_BOOT_WAIT_MS = 4000;
@@ -56,7 +57,9 @@ public class Autoloader implements Runnable {
             throw new IllegalStateException("Autoload configuration not found");
         }
         Status.println("Found autoload config: " + configFile.getAbsolutePath());
-        notifyPs("Found autoload config:\n" + configFile.getAbsolutePath());
+        if (SHOW_DEBUG_NOTIFICATIONS) {
+            notifyPs("Found autoload config:\n" + configFile.getAbsolutePath());
+        }
 
         File configDir = configFile.getParentFile();
         if (configDir == null) {
@@ -100,7 +103,9 @@ public class Autoloader implements Runnable {
             File jarFile = resolvePath(command, configDir);
             requireFileExists(jarFile, "JAR not found");
             Status.println("Executing JAR: " + jarFile.getAbsolutePath());
-            notifyPs("Executing JAR:\n" + jarFile.getAbsolutePath());
+            if (SHOW_DEBUG_NOTIFICATIONS) {
+                notifyPs("Executing JAR:\n" + jarFile.getAbsolutePath());
+            }
             jarPayloadExecutor.execute(jarFile);
             return;
         }
@@ -119,7 +124,9 @@ public class Autoloader implements Runnable {
             ensureElfLoaderRunning(null);
             int sent = elfSender.sendFile(elfFile);
             Status.println("Sent " + sent + " bytes: " + elfFile.getAbsolutePath());
-            notifyPs("ELF sent: " + elfFile.getName() + " (" + sent + " bytes)");
+            if (SHOW_DEBUG_NOTIFICATIONS) {
+                notifyPs("ELF sent: " + elfFile.getName() + " (" + sent + " bytes)");
+            }
             return;
         }
 
@@ -157,7 +164,9 @@ public class Autoloader implements Runnable {
 
         String source = (overrideElfLdr == null) ? "bundled /elfldr.elf" : overrideElfLdr.getAbsolutePath();
         Status.println("Starting elfldr from " + source);
-        notifyPs("Starting elfldr...\n" + source);
+        if (SHOW_DEBUG_NOTIFICATIONS) {
+            notifyPs("Starting elfldr...\n" + source);
+        }
 
         genericElfLoader.loadAndRun(overrideElfLdr == null ? null : overrideElfLdr.getAbsolutePath());
 
