@@ -1,6 +1,7 @@
 package org.ps5jb.loader.jar;
 
 import org.ps5jb.loader.Config;
+import org.ps5jb.loader.ProgressUI;
 import org.ps5jb.loader.Status;
 
 import java.io.File;
@@ -32,6 +33,19 @@ public class SequentialJarLoader implements JarLoader {
         }
 
         for (int i = 0; i < payloads.length && !terminated; i++) {
+            String payloadName = payloads[i];
+            String label = "Loading " + payloadName + "...";
+            int progress = 10 + (int) (((i + 0.5) / payloads.length) * 30);
+            if (payloadName.toLowerCase().indexOf("umtx") != -1) {
+                label = "Running kernel exploit...";
+                progress = 20;
+            } else if (payloadName.toLowerCase().indexOf("bdjb-autoloader") != -1) {
+                label = "Initializing autoloader...";
+                progress = 40;
+            }
+
+            ProgressUI.getInstance().setProgress(progress, label);
+
             File jarFile = resolvePayloadJar(payloads[i], payloadDir);
             if (jarFile == null) {
                 Status.println("Payload not found on first attempt, waiting for path stabilization: " + payloads[i]);
@@ -48,20 +62,21 @@ public class SequentialJarLoader implements JarLoader {
             if (jarFile != null) {
                 try {
                     payloadDir = jarFile.getParentFile();
-                    Status.println("Auto-loading " + payloads[i] + "...");
+                    Status.info("Auto-loading " + payloads[i] + "...");
                     loadJar(jarFile, false);
-                    Status.println(payloads[i] + " execution finished.");
+                    Status.success(payloads[i] + " execution finished.");
                 } catch (Throwable e) {
                     Status.printStackTrace("Failed to load " + payloads[i], e);
                     break;
                 }
             } else {
-                Status.println("Payload not found: " + payloads[i]);
+                Status.error("Payload not found: " + payloads[i]);
             }
         }
         
         if (!terminated) {
-            Status.println("Autoload sequence complete.");
+            ProgressUI.getInstance().setProgress(100, "Finished");
+            Status.success("Autoload sequence complete.");
         }
     }
 

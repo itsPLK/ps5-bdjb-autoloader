@@ -82,7 +82,7 @@ public class Status {
         String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
 
         if (inXlet()) {
-            Screen.println(finalMsg, true, replaceLast);
+            ProgressUI.getInstance().log(finalMsg);
         } else {
             System.out.println(finalMsg);
         }
@@ -91,6 +91,37 @@ public class Status {
         if (System.getSecurityManager() == null) {
             initLogger();
             LOGGER.info(finalMsg);
+        }
+    }
+
+    /**
+     * Outputs an informational message to both the log and the UI.
+     *
+     * @param msg Information message.
+     */
+    public static void info(String msg) {
+        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        if (inXlet()) {
+            ProgressUI.getInstance().log(finalMsg);
+        } else {
+            System.out.println("INFO: " + finalMsg);
+        }
+
+        if (System.getSecurityManager() == null) {
+            initLogger();
+            LOGGER.info("INFO: " + finalMsg);
+        }
+    }
+
+    /**
+     * Updates the progress bar on the UI.
+     *
+     * @param percent Progress percentage (0-100).
+     * @param label Status message displayed below the progress bar.
+     */
+    public static void setProgress(int percent, String label) {
+        if (inXlet()) {
+            ProgressUI.getInstance().setProgress(percent, label);
         }
     }
 
@@ -104,7 +135,7 @@ public class Status {
         String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
 
         if (inXlet()) {
-            Screen.println(finalMsg);
+            ProgressUI.getInstance().logError(finalMsg);
             Screen.getInstance().printStackTrace(e);
         } else {
             System.out.println(finalMsg);
@@ -115,6 +146,63 @@ public class Status {
         if (System.getSecurityManager() == null) {
             initLogger();
             LOGGER.error(finalMsg, e);
+        }
+    }
+
+    /**
+     * Outputs a success message.
+     *
+     * @param msg Success message.
+     */
+    public static void success(String msg) {
+        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        if (inXlet()) {
+            ProgressUI.getInstance().logSuccess(finalMsg);
+        } else {
+            System.out.println("SUCCESS: " + finalMsg);
+        }
+
+        if (System.getSecurityManager() == null) {
+            initLogger();
+            LOGGER.info("SUCCESS: " + finalMsg);
+        }
+    }
+
+    /**
+     * Outputs a warning message.
+     *
+     * @param msg Warning message.
+     */
+    public static void warning(String msg) {
+        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        if (inXlet()) {
+            ProgressUI.getInstance().logWarning(finalMsg);
+        } else {
+            System.out.println("WARNING: " + finalMsg);
+        }
+
+        if (System.getSecurityManager() == null) {
+            initLogger();
+            LOGGER.info("WARNING: " + finalMsg);
+        }
+    }
+
+    /**
+     * Outputs an error message.
+     *
+     * @param msg Error message.
+     */
+    public static void error(String msg) {
+        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        if (inXlet()) {
+            ProgressUI.getInstance().logError(finalMsg);
+        } else {
+            System.err.println("ERROR: " + finalMsg);
+        }
+
+        if (System.getSecurityManager() == null) {
+            initLogger();
+            LOGGER.error(finalMsg, new RuntimeException(msg));
         }
     }
 

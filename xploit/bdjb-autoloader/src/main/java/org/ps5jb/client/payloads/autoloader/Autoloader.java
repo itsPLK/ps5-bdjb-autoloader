@@ -39,6 +39,7 @@ public class Autoloader implements Runnable {
 
     private void runInternal() throws Exception {
         Status.println("Autoloader starting...");
+        Status.setProgress(50, "Reading configuration...");
 
         try {
             int uid = libKernel.getuid();
@@ -70,11 +71,16 @@ public class Autoloader implements Runnable {
             Status.println("Autoload config contains no actionable entries");
             return;
         }
+        Status.setProgress(60, "Processing payload list...");
         for (String command : commands) {
             processCommand(command, configDir);
         }
 
         // Kill the Disc Player app after all commands are processed
+        Status.setProgress(100, "Finished");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ignored) {}
         killApp();
     }
 
@@ -121,7 +127,9 @@ public class Autoloader implements Runnable {
             File elfFile = resolvePath(command, configDir);
             requireFileExists(elfFile, "ELF/BIN not found");
 
+            Status.setProgress(70, "Loading ELF Loader...");
             ensureElfLoaderRunning(null);
+            Status.setProgress(80, "Sending payload...");
             int sent = elfSender.sendFile(elfFile);
             Status.println("Sent " + sent + " bytes: " + elfFile.getAbsolutePath());
             if (SHOW_DEBUG_NOTIFICATIONS) {

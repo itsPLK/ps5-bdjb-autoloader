@@ -43,9 +43,9 @@ public class LoaderXlet implements Xlet {
         // we are allowed to just set it to null by com.sony.bdjstack.security.BdjPolicyImpl.
         try {
             if (DisableSecurityManagerAction.execute() == null) {
-                Status.println("Security Manager disabled");
+                Status.success("Security Manager disabled");
             } else {
-                Status.println("Security Manager could not be disabled");
+                Status.error("Security Manager could not be disabled");
             }
         } catch (Throwable e) {
             Status.printStackTrace("Security Manager disabler encountered an error", e);
@@ -53,10 +53,15 @@ public class LoaderXlet implements Xlet {
 
         // Now setup the screen.
         // Note that config properties would be inaccessible if security manager is not disabled.
-        Screen.getInstance().setSize(Config.getLoaderResolutionWidth(), Config.getLoaderResolutionHeight());
+        Screen screen = Screen.getInstance();
+        screen.setSize(Config.getLoaderResolutionWidth(), Config.getLoaderResolutionHeight());
+        screen.setTitle("PS5 BD-JB Autoloader");
+        
         scene = HSceneFactory.getInstance().getDefaultHScene();
-        scene.add(Screen.getInstance(), BorderLayout.CENTER);
+        scene.add(screen, BorderLayout.CENTER);
         scene.validate();
+
+        ProgressUI.getInstance().setProgress(0, "Initializing...");
     }
 
     /**
@@ -69,6 +74,7 @@ public class LoaderXlet implements Xlet {
 
         try {
             if (System.getSecurityManager() == null) {
+                ProgressUI.getInstance().setProgress(10, "Loading payloads...");
                 jarLoader = new SequentialJarLoader(new String[] {
                     "umtx1-1.0-SNAPSHOT.jar",
                     "bdjb-autoloader-0.1.0-SNAPSHOT.jar"

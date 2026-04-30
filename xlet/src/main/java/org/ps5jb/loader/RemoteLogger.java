@@ -80,7 +80,7 @@ public class RemoteLogger {
         }
 
         if (ex != null) {
-            Screen.println("Network data could not be sent", false, false);
+            Screen.println("Network data could not be sent", Screen.MessageType.ERROR, false, false);
             Screen.getInstance().printStackTrace(ex);
         }
     }
@@ -105,7 +105,7 @@ public class RemoteLogger {
         }
 
         if (ex != null) {
-            Screen.println("Network message could not be sent", false, false);
+            Screen.println("Network message could not be sent", Screen.MessageType.ERROR, false, false);
             Screen.getInstance().printStackTrace(ex);
         }
     }
@@ -190,7 +190,7 @@ public class RemoteLogger {
                 }
             }
         } catch (Throwable e) {
-            Screen.println("Sending debug message failed", false, false);
+            Screen.println("Sending debug message failed", Screen.MessageType.ERROR, false, false);
             Screen.getInstance().printStackTrace(e);
         }
     }
