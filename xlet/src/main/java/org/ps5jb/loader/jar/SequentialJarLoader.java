@@ -45,6 +45,7 @@ public class SequentialJarLoader implements JarLoader {
             }
 
             ProgressUI.getInstance().setProgress(progress, label);
+            Status.warning(label);
 
             File jarFile = resolvePayloadJar(payloads[i], payloadDir);
             if (jarFile == null) {
@@ -62,9 +63,7 @@ public class SequentialJarLoader implements JarLoader {
             if (jarFile != null) {
                 try {
                     payloadDir = jarFile.getParentFile();
-                    Status.info("Auto-loading " + payloads[i] + "...");
                     loadJar(jarFile, false);
-                    Status.success(payloads[i] + " execution finished.");
                 } catch (Throwable e) {
                     Status.printStackTrace("Failed to load " + payloads[i], e);
                     break;
@@ -76,7 +75,7 @@ public class SequentialJarLoader implements JarLoader {
         
         if (!terminated) {
             ProgressUI.getInstance().setProgress(100, "Finished");
-            Status.success("Autoload sequence complete.");
+            Status.success("Finished");
         }
     }
 

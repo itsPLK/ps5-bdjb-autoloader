@@ -63,7 +63,7 @@ public class DebugStatus {
 
     public static void info(String message) {
         if (isInfoEnabled()) {
-            Status.info(message);
+            Status.println(message);
         }
     }
 
@@ -73,7 +73,7 @@ public class DebugStatus {
 
     public static void error(String message) {
         if (isErrorEnabled()) {
-            Status.error(message);
+            Status.println(message);
         }
     }
 

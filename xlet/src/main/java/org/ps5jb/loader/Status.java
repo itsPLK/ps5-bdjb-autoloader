@@ -79,11 +79,9 @@ public class Status {
      *   (not applicable to remote log or when not running in Xlet).
      */
     public static void println(String msg, boolean replaceLast) {
-        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        String finalMsg = msg;
 
-        if (inXlet()) {
-            ProgressUI.getInstance().log(finalMsg);
-        } else {
+        if (!inXlet()) {
             System.out.println(finalMsg);
         }
 
@@ -100,7 +98,7 @@ public class Status {
      * @param msg Information message.
      */
     public static void info(String msg) {
-        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        String finalMsg = msg;
         if (inXlet()) {
             ProgressUI.getInstance().log(finalMsg);
         } else {
@@ -132,7 +130,7 @@ public class Status {
      * @param e Exception whose stack trace to output.
      */
     public static void printStackTrace(String msg, Throwable e) {
-        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        String finalMsg = msg;
 
         if (inXlet()) {
             ProgressUI.getInstance().logError(finalMsg);
@@ -155,7 +153,7 @@ public class Status {
      * @param msg Success message.
      */
     public static void success(String msg) {
-        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        String finalMsg = msg;
         if (inXlet()) {
             ProgressUI.getInstance().logSuccess(finalMsg);
         } else {
@@ -174,7 +172,7 @@ public class Status {
      * @param msg Warning message.
      */
     public static void warning(String msg) {
-        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        String finalMsg = msg;
         if (inXlet()) {
             ProgressUI.getInstance().logWarning(finalMsg);
         } else {
@@ -193,7 +191,7 @@ public class Status {
      * @param msg Error message.
      */
     public static void error(String msg) {
-        String finalMsg = "[" + Thread.currentThread().getName() + "] " + msg;
+        String finalMsg = msg;
         if (inXlet()) {
             ProgressUI.getInstance().logError(finalMsg);
         } else {

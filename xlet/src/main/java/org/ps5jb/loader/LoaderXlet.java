@@ -71,6 +71,13 @@ public class LoaderXlet implements Xlet {
     public void startXlet() {
         Screen.getInstance().setVisible(true);
         scene.setVisible(true);
+        
+        try {
+            String version = getXletImplementationVersion();
+            Status.info("PS5 BD-JB Autoloader v" + version + " by PLK");
+        } catch (Throwable e) {
+            Status.info("PS5 BD-JB Autoloader by PLK");
+        }
 
         try {
             if (System.getSecurityManager() == null) {

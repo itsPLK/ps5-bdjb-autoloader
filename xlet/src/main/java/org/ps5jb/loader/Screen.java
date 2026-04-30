@@ -53,9 +53,9 @@ public class Screen extends Container {
         }
     }
 
-    private final Font FONT = new Font(null, Font.PLAIN, 15);
-    private final Font TITLE_FONT = new Font(null, Font.BOLD, 30);
-    private final Font PROGRESS_FONT = new Font(null, Font.PLAIN, 18);
+    private final Font FONT = new Font("SansSerif", Font.BOLD, 28);
+    private final Font TITLE_FONT = new Font("SansSerif", Font.BOLD, 48);
+    private final Font PROGRESS_FONT = new Font("SansSerif", Font.BOLD, 28);
 
     private final ArrayList messages = new ArrayList();
     private int progressPercent = 0;
@@ -130,7 +130,7 @@ public class Screen extends Container {
                 messages.remove(messages.size() - 1);
             }
             messages.add(new Message(msg, type));
-            if (messages.size() > 20) {
+            if (messages.size() > 17) {
                 messages.remove(0);
             }
             isDirty.set(true);
@@ -264,7 +264,7 @@ public class Screen extends Container {
 
         // 3. Draw Log Container
         int logWidth = (int) (width * 0.7);
-        int logHeight = (int) (height * 0.60);
+        int logHeight = (int) (height * 0.70);
         int logX = (width - logWidth) / 2;
         int logY = 150;
 
@@ -281,19 +281,19 @@ public class Screen extends Container {
         g.setFont(FONT);
         int fontHeight = g.getFontMetrics().getHeight();
         int msgX = logX + 15;
-        int msgY = logY + 25;
+        int msgY = logY + 40;
         for (int i = 0; i < messagesCopy.size(); i++) {
             Message msg = (Message) messagesCopy.get(i);
             g.setColor(msg.type.getColor());
             g.drawString("> " + msg.text, msgX, msgY);
-            msgY += fontHeight + 5;
+            msgY += fontHeight + 8;
         }
 
         // 4. Draw Progress Bar
         int pbWidth = (int) (width * 0.6);
         int pbHeight = 40;
         int pbX = (width - pbWidth) / 2;
-        int pbY = logY + logHeight + 40;
+        int pbY = logY + logHeight + 30;
 
         drawProgressBar(g, pbX, pbY, pbWidth, pbHeight, pct, pctMsg);
 

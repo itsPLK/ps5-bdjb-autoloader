@@ -57,7 +57,7 @@ public class Autoloader implements Runnable {
             }
             throw new IllegalStateException("Autoload configuration not found");
         }
-        Status.println("Found autoload config: " + configFile.getAbsolutePath());
+        Status.warning("Found autoload config at: " + configFile.getAbsolutePath());
         if (SHOW_DEBUG_NOTIFICATIONS) {
             notifyPs("Found autoload config:\n" + configFile.getAbsolutePath());
         }
@@ -78,6 +78,7 @@ public class Autoloader implements Runnable {
 
         // Kill the Disc Player app after all commands are processed
         Status.setProgress(100, "Finished");
+        Status.success("Finished");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ignored) {}
@@ -127,6 +128,7 @@ public class Autoloader implements Runnable {
             File elfFile = resolvePath(command, configDir);
             requireFileExists(elfFile, "ELF/BIN not found");
 
+            Status.warning("Loading " + elfFile.getName());
             Status.setProgress(70, "Loading ELF Loader...");
             ensureElfLoaderRunning(null);
             Status.setProgress(80, "Sending payload...");
