@@ -19,4 +19,4 @@
 #   elfldr.elf (must be that filename!) line before other ELFs.
 # -----------------------------------------------------------------------------------------
 
-pldmgr.elf
+pldmgr_v0.1.0.elf
