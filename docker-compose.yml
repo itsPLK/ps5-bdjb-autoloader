@@ -12,25 +12,25 @@ services:
         set -euo pipefail
         echo 'Downloading stubs (BD-J APIs)...'
         mvn install -f stubs/pom.xml -DskipTests
-        
+
         echo 'Building project with Maven...'
         mvn clean package -P xploitOnDisc -DskipTests
-        
+
         echo 'Extracting version...'
         VERSION=$$(mvn help:evaluate -Dexpression=xlet.version -q -DforceStdout)
-        
+
         echo "Generating ISO for version: $${VERSION}..."
         DISC_DIR="assembly/target/assembly-$${VERSION}"
-        
+
         if [ ! -d "$${DISC_DIR}" ]; then
           echo "Error: Assembly directory not found at $${DISC_DIR}"
           exit 1
         fi
-        
-        rm -f ps5-jar-loader.iso
-        makefs -s 16m -S 2048 -t udf -o v=2.50,T=bdrom,L=PS5_JAR_LOADER ps5-jar-loader.iso "$${DISC_DIR}/AVCHD"
-        chmod 666 ps5-jar-loader.iso
-        echo 'ISO successfully created: ps5-jar-loader.iso'
+
+        rm -f ps5-bdjb-autoloader.iso
+        makefs -s 16m -S 2048 -t udf -o v=2.50,T=bdrom,L=PS5_JAR_LOADER ps5-bdjb-autoloader.iso "$${DISC_DIR}/AVCHD"
+        chmod 666 ps5-bdjb-autoloader.iso
+        echo 'ISO successfully created: ps5-bdjb-autoloader.iso'
 
 volumes:
   m2-cache:

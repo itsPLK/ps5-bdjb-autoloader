@@ -13,4 +13,4 @@ docker-compose build builder
 docker-compose run --rm --remove-orphans builder
 
 echo ""
-echo "Done! If successful, ps5-jar-loader.iso should be in the current directory."
+echo "Done! If successful, ps5-bdjb-autoloader.iso should be in the current directory."
