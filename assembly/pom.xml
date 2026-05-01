@@ -204,11 +204,6 @@
                   This will make sure that the JAR is built before the assembly when compiling.
                 -->
                 <dependency>
-                    <groupId>org.ps5jb.xploit</groupId>
-                    <artifactId>jailbreak</artifactId>
-                    <version>${project.parent.version}</version>
-                </dependency>
-                <dependency>
                     <groupId>org.ps5jb.xploit.umtx</groupId>
                     <artifactId>umtx1</artifactId>
                     <version>${project.parent.version}</version>
