@@ -40,12 +40,13 @@ MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 BDJSDK_HOME  ?= $(MAKEFILE_DIR)/../../
 BDSIGNER     := $(BDJSDK_HOME)/host/bin/bdsigner
 MAKEFS       := $(BDJSDK_HOME)/host/bin/makefs
-JAVA8_HOME    ?= $(BDJSDK_HOME)/host/jdk8
+JAVA8_HOME   ?= $(BDJSDK_HOME)/host/jdk8
+JAVA11_HOME  ?= $(BDJSDK_HOME)/host/jdk11
 JAVAC        := $(JAVA8_HOME)/bin/javac
 JAR          := $(JAVA8_HOME)/bin/jar
 
 export JAVA8_HOME
-
+export JAVA11_HOME
 
 #
 # Compilation artifacts
@@ -92,7 +93,8 @@ discdir:
 
 discdir/BDMV/JAR/00000.jar: discdir $(SOURCES)
 	$(JAVAC) $(JFLAGS) -cp $(CLASSPATH) $(SOURCES)
-	$(JAR) cf $@ -C src/ .	
+	$(JAR) cf $@ -C src/ .
+	$(BDSIGNER) -keystore $(BDJSDK_HOME)/resources/sig.ks $@
 
 discdir/%: discdir
 	cp $(BDJSDK_HOME)/resources/AVCHD/$* $@
@@ -105,7 +107,8 @@ $(ISO_FILE): $(DISC_FILES) autoloader poops
 	sed -i "s/@@VERSION@@/$(XML_VERSION)/g" discdir/BDMV/META/DL/bdmt_eng.xml
 	cp -r BDMV/BDJO discdir/BDMV/
 	cp payloads/autoloader/ps5-unified-autoloader.elf discdir/
-	$(MAKEFS) -m 16m -t udf -o T=bdre,v=2.50,L=$(DISC_LABEL) $@ discdir
+	$(JAR) cfM discdir/BDMV/JAR/00001.jar -C 00001 .
+	$(MAKEFS) -m 16m -t udf -o T=bdre,v=2.50,L=$(DISC_LABEL) $@  discdir
 
 clean:
 	$(MAKE) -C payloads/autoloader clean

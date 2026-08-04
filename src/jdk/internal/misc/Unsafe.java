@@ -1,8 +1,17 @@
 package jdk.internal.misc;
 
 import java.lang.reflect.Field;
+import java.security.ProtectionDomain;
 
 public class Unsafe {
+  public static jdk.internal.misc.Unsafe getUnsafe() {
+    return null;
+  }
+
+  public Class defineClass(String paramString, byte[] paramArrayOfbyte, int paramInt1, int paramInt2, ClassLoader paramClassLoader, ProtectionDomain paramProtectionDomain) {
+    return null;
+  }
+  
   public byte getByte(long address) {
     return 42;
   }

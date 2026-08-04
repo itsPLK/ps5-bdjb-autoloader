@@ -2,9 +2,9 @@
  <img src="./ps5loader.png" width="128" />
 </p>
 <h1 align="center">PS5 BD-JB Autoloader</h1>
-<h3 align="center">Fork of <a href="https://github.com/Gezine/BD-UN-JB">BD-UN-JB</a></h3>
+<h3 align="center">Fork of <a href="https://github.com/Gezine/BD-JB5">BD-JB5</a></h3>
 &nbsp;
-<p align="center">Automatically loads the kernel exploit and your elf payloads.<br>Supports PS5 firmwares 4.03-12.00. <br><b>Note:</b> To work on firmwares <b>above 7.61</b>, the PS5 must already be jailbroken (requires the <a href="https://github.com/Gezine/BD-UN-JB/releases">bdj_unpatch</a> payload).</p>
+<p align="center">Automatically loads the kernel exploit and your elf payloads.<br>Supports PS5 firmwares 4.03-12.00.</p>
 
 <p align="center">
     <b>Other Autoloaders:</b><br>
@@ -82,7 +82,7 @@ ftpsrv.elf
 
 ## Credits
 
-* **[Gezine](https://github.com/Gezine)** - [BD-UN-JB](https://github.com/Gezine/BD-UN-JB), [Poops exploit implementation](https://github.com/Gezine/BD-UN-JB/blob/main/payloads/poops/src/org/bdj/external/Poops.java)
+* **[Gezine](https://github.com/Gezine)** - [BD-JB5](https://github.com/Gezine/BD-JB5), [Poops exploit implementation](https://github.com/Gezine/BD-JB5/blob/main/payloads/poops/src/org/bdj/external/Poops.java)
 * **[TheFlow](https://github.com/theofficialflow)** — BD-JB documentation & native code execution sources.  
 * **[hammer-83](https://github.com/hammer-83)** — PS5 Remote JAR Loader reference.  
 * **[john-tornblom](https://github.com/john-tornblom)** — [BDJ-SDK](https://github.com/john-tornblom/bdj-sdk) and [ps5-payload-sdk](https://github.com/ps5-payload-dev/sdk/) used for compilation.  
