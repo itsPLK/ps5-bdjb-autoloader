@@ -1,8 +1,5 @@
 package org.bdj;
 
-import java.io.*;
-import java.net.*;
-import java.lang.*;
 import java.lang.reflect.*;
 
 import java.awt.BorderLayout;
@@ -13,6 +10,7 @@ import org.havi.ui.HSceneFactory;
 
 import org.bdj.sandbox.Exploit;
 import org.bdj.sandbox.ExploitInternal;
+import java.net.InetAddress;
 
 public class InitXlet implements Xlet {
     private HScene scene;
@@ -20,6 +18,9 @@ public class InitXlet implements Xlet {
     private InternalJarLoader internalJarLoader;
     private Thread internalJarLoaderThread;
     private final String jarLoaderThreadName = "JarLoader";
+    
+    private final String versionString = "BD-JB5 2.0 by Gezine";
+    private final boolean UseInternalJar = false;
     
     public void initXlet(XletContext context) {
         Status.setScreenOutputEnabled(true);
@@ -91,7 +92,3 @@ public class InitXlet implements Xlet {
         scene = null;
     }
 }
-
-
-
-
