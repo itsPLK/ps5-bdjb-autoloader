@@ -16,7 +16,7 @@
 
 
 DISC_LABEL := ps5-bd-jb-autoloader
-VERSION    := 1.4.1
+VERSION    := 1.5.0
 
 # Git info for versioning
 GIT_HASH   := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
